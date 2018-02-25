@@ -1,0 +1,119 @@
+# Define the port where the API gateway server would be running
+server:
+  port: 8765
+  
+logging:
+  file: logs/Landscape-Edge-Server.log    
+  pattern:
+    file: '%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n'
+  level:
+     root: debug         
+     org:
+       springframework:
+         security: DEBUG
+         
+ 
+    
+## Added to avoid the 401(Unauthorized) when opening url /routes
+endpoints:
+  routes:
+    sensitive: false
+  
+# Define the routes which determine what URL are serviced by what applications.
+# The application/services are defined in the bootstrap.yml file of individual applications
+# using the spring.application.name property.
+
+# Note that we don't proxy the calls to the authorization server. The reason being that
+# Spring cloud security would need to secure the api gateway before it can route the
+# requests using zuul
+zuul:
+    # SEMAPHORE / THREAD
+    #ribbonIsolationStrategy: SEMAPHORE
+  #Service will be mapped under the /api URI
+  #prefix: /api
+#  Uncomment to disable auto-registering all services read from Eureka
+  ignoredServices: '*'
+  routes:
+    
+    customer-by-address:
+      path: /customer-by-address/**
+      url: http://localhost:9098
+    customer-by-service:
+      path: /customer-by-service/**
+      serviceId: CUSTOMER-SERVICE
+      
+    aggregation-customer-by-address:
+      path: /aggregation-customer-by-address/**
+      url: http://localhost:6010
+    aggregation-customer-by-service:
+      path: /aggregation-customer-by-service/**
+      serviceId: AGGREGATION-CUSTOMER-SERVICE      
+      
+    aggregation-product-by-address:
+      path: /aggregation-product-by-address/**
+      url: http://localhost:6020
+      sensitiveHeaders: Cookie,Set-Cookie      
+    aggregation-product-by-service:
+      path: /aggregation-product-by-service/**
+      serviceId: AGGREGATION-PRODUCT-SERVICE
+      sensitiveHeaders: Cookie,Set-Cookie
+
+    aggregation-payment-by-address:
+      path: /aggregation-payment-by-address/**
+      url: http://localhost:6030
+    aggregation-payment-by-service:
+      path: /aggregation-payment-by-service/**
+      serviceId: AGGREGATION-PAYMENT-SERVICE
+       
+    landscape-auth-server: /auth/**       
+    static:
+      path: /static/**
+    
+    
+# Define the Eureka server that handles service registration
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+      
+      
+      
+spring:
+  aop:
+    proxy-target-class: true
+  zipkin:
+    baseUrl: http://localhost:9411/
+  sleuth:
+    sampler:
+# Generally the tracing data volume can be quite high; so we can tell Spring sleuth to
+# sample only some percentage of requests by specifying a double value between 0.0 and 1.0.
+
+# For testing purposes, we are sampling all requests (1.0) but generally in production you should
+# sample only 10-20% of the data or write custome strategy to sample say only in case of 500 errors.
+      percentage: 1.0
+      
+  ## SECURITY
+    
+    #oauth2:
+    #resource:
+    #  userInfoUri: http://localhost:9999/uaa/user
+
+# When enabled=false, traces log to the console. Comment to send to zipkin
+sample:
+  zipkin:
+    enabled: true
+
+# Use Ribbon to route requests
+ribbon:
+    eureka:
+        enabled: true
+        
+
+# Oauth2 Resource user endpoint
+security:
+    oauth2:
+        resource:
+            user-info-uri: http://localhost:8899/user
+            userInfoUri: http://localhost:8899/user
+            prefer-token-info: true
