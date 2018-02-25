@@ -1,3 +1,16 @@
 # eureka service app props
+---
+spring:
+  profiles:
+     active: dev
+     
 server:
-    port: 8771
+    port: 8772
+
+---
+spring:
+  profiles:
+     active: docker
+     
+server:
+    port: 8773
