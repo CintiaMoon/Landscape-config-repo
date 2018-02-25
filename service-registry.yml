@@ -1,0 +1,3 @@
+# eureka service app props
+server:
+    port: 8761
