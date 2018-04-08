@@ -68,11 +68,22 @@ zuul:
       path: /static/**
     
     
-# Define the Eureka server that handles service registration
+# Eureka Configs
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://landscape-eureka-server:8761/eureka           
+    instance:
+        hostname: localhost
+        leaseRenewalIntervalInSeconds: 10
+        leaseExpirationDurationInSeconds: 5
+    client:
+        serviceUrl:
+            defaultZone: http://${registry.serviceName}:${registry.servicePort}/eureka/
+        healthcheck:
+            enabled: true
+        lease:
+            duration: 5
+    server:
+        waitTimeInMsWhenSyncEmpty: 0
+        
       
 spring:
   aop:
