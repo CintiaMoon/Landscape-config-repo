@@ -1,18 +1,8 @@
 # Define the port where the API gateway server would be running
 server:
   port: 8765
+     
   
-logging:
-  file: logs/landscape-edge-server.log    
-  pattern:
-    file: '%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n'
-  level:
-     root: debug         
-     org:
-       springframework:
-         security: DEBUG         
- 
-    
 ## Added to avoid the 401(Unauthorized) when opening url /routes
 endpoints:
   routes:
