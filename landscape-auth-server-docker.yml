@@ -5,8 +5,8 @@ spring:
 # ===============================
   datasource:
       url: jdbc:postgresql://localhost:5432/landscape
-      username: admin
-      password: admin
+      username: landscape
+      password: landscape
 # ===============================
 # = JPA configurations
 # ===============================
