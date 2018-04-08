@@ -1,0 +1,30 @@
+spring:
+    profiles: docker
+    zipkin:
+        baseUrl: http://landscape-zipkin-server:9411/
+        
+registry:
+    serviceName: landscape-eureka-server
+    servicePort: 8761
+    
+# Eureka Configs
+eureka:
+    instance:
+#        hostname: localhost
+        preferIpAddress: true # This is for the inter-container communication for docker
+        leaseRenewalIntervalInSeconds: 10
+        leaseExpirationDurationInSeconds: 5
+    client:
+        serviceUrl:
+            defaultZone: http://${registry.serviceName}:${registry.servicePort}/eureka/
+        healthcheck:
+            enabled: true
+        lease:
+            duration: 5
+    server:
+        waitTimeInMsWhenSyncEmpty: 0
+
+# Cache the config properties for 30 minutes before retrieving it once again
+health:
+    config:
+        time-to-live: 1800000 # milliseconds
