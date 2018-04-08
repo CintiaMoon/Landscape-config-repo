@@ -1,0 +1,36 @@
+spring:
+  profiles: docker
+# ===============================
+# = Hibernate datasource
+# ===============================
+  datasource:
+      url: jdbc:postgresql://localhost:65432/landscape
+      username: admin
+      password: admin
+# ===============================
+# = JPA configurations
+# ===============================
+  jpa:
+      show-sql: true
+      hibernate:
+          ddl-auto: update
+          naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+          database-platform: postgres
+  properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect 
+      
+# Eureka Configs
+eureka:
+    instance:
+        hostname: localhost
+        leaseRenewalIntervalInSeconds: 10
+        leaseExpirationDurationInSeconds: 5
+    client:
+        serviceUrl:
+            defaultZone: http://${registry.serviceName}:${registry.servicePort}/eureka/
+        healthcheck:
+            enabled: true
+        lease:
+            duration: 5
+    server:
+        waitTimeInMsWhenSyncEmpty: 0
