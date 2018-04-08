@@ -15,8 +15,7 @@ logging:
      org:
        springframework:
          security: DEBUG
-         
-    
+             
 ---
 spring:
   profiles: dev
@@ -30,24 +29,3 @@ spring:
     hibernate:
       ddl-auto: validate
  
----
-spring:
-  profiles: docker
-# ===============================
-# = Hibernate datasource
-# ===============================
-  datasource:
-      url: jdbc:postgresql://localhost:65432/landscape
-      username: admin
-      password: admin
-# ===============================
-# = JPA configurations
-# ===============================
-  jpa:
-      show-sql: true
-      hibernate:
-          ddl-auto: update
-          naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-          database-platform: postgres
-  properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect 
